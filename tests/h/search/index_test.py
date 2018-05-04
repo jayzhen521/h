@@ -6,6 +6,7 @@ import pytest
 
 from h import presenters
 from h import search
+from h.search import index as search_index
 
 
 class TestIndexAnnotationDocuments(object):
@@ -101,7 +102,7 @@ class TestIndexAnnotation:
     def test_it_presents_the_annotation(self, es, presenters, pyramid_request):
         annotation = mock.Mock()
 
-        search.index.index(es, annotation, pyramid_request)
+        search_index.index(es, annotation, pyramid_request)
 
         presenters.AnnotationSearchIndexPresenter.assert_called_once_with(annotation)
 
@@ -113,7 +114,7 @@ class TestIndexAnnotation:
         annotation = mock.Mock()
         presented = presenters.AnnotationSearchIndexPresenter.return_value.asdict()
 
-        search.index.index(es, annotation, pyramid_request)
+        search_index.index(es, annotation, pyramid_request)
 
         AnnotationTransformEvent.assert_called_once_with(pyramid_request, annotation, presented)
 
@@ -123,13 +124,13 @@ class TestIndexAnnotation:
                                            notify,
                                            presenters,
                                            pyramid_request):
-        search.index.index(es, mock.Mock(), pyramid_request)
+        search_index.index(es, mock.Mock(), pyramid_request)
 
         event = AnnotationTransformEvent.return_value
         notify.assert_called_once_with(event)
 
     def test_it_indexes_the_annotation(self, es, presenters, pyramid_request):
-        search.index.index(es, mock.Mock(), pyramid_request)
+        search_index.index(es, mock.Mock(), pyramid_request)
 
         es.conn.index.assert_called_once_with(
             index='hypothesis',
@@ -139,7 +140,7 @@ class TestIndexAnnotation:
         )
 
     def test_it_allows_to_override_target_index(self, es, presenters, pyramid_request):
-        search.index.index(es, mock.Mock(), pyramid_request, target_index='custom-index')
+        search_index.index(es, mock.Mock(), pyramid_request, target_index='custom-index')
 
         _, kwargs = es.conn.index.call_args
         assert kwargs['index'] == 'custom-index'
@@ -404,5 +405,5 @@ def AnnotationTransformEvent(patch):
 def index(es_client, pyramid_request):
     def _index(annotation):
         """Index the given annotation into Elasticsearch."""
-        search.index.index(es_client, annotation, pyramid_request)
+        search_index.index(es_client, annotation, pyramid_request)
     return _index
