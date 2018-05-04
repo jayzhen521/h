@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 
 import mock
 import pytest
+import elasticsearch1_dsl
 
 from h import presenters
 from h import search
@@ -67,33 +68,18 @@ class TestIndexAnnotationDocuments(object):
 class TestIndex(object):
     """Elasticsearch-integrated tests for :py:func:`h.search.index.index()`."""
 
-    def test_you_can_search_for_an_annotation_by_authority(self, es_client, factories, index):
-        annotation = factories.Annotation.build(
-            id="test_annotation_id",
-            userid="acct:someone@example.com",
-        )
+    def test_you_can_filter_annotations_by_authority(self, factories, index, search):
+        annotation = factories.Annotation.build(id="test_annotation_id", userid="acct:someone@example.com")
 
         index(annotation)
 
-        es_client.conn.indices.refresh(index=es_client.index)
-        search_results = [hit["_id"] for hit in es_client.conn.search(
-            index=es_client.index,
-            doc_type="annotation",
-            _source=False,
-            body={
-                "query": {
-                    "filtered": {
-                        "filter": {
-                            "term": {
-                                "authority": "example.com"
-                            }
-                        }
-                    }
-                }
-            }
-        )["hits"]["hits"]]
+        search_results = search.filter("term", authority="example.com").execute()
+        ids = [search_result.meta["id"] for search_result in search_results]
+        assert ids == [annotation.id]
 
-        assert search_results == [annotation.id]
+    @pytest.fixture
+    def search(self, es_client):
+        return elasticsearch1_dsl.Search(using=es_client.conn).fields([])
 
 
 @pytest.mark.usefixtures('presenters')
@@ -406,4 +392,5 @@ def index(es_client, pyramid_request):
     def _index(annotation):
         """Index the given annotation into Elasticsearch."""
         search_index.index(es_client, annotation, pyramid_request)
+        es_client.conn.indices.refresh(index=es_client.index)
     return _index
