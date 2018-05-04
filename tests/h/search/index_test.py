@@ -6,7 +6,7 @@ import pytest
 
 from h import presenters
 from h.search import client
-from h.search import index
+from h.search import index as index_
 
 
 class TestIndexAnnotationDocuments(object):
@@ -55,13 +55,6 @@ class TestIndexAnnotationDocuments(object):
         assert "title" not in get(annotation.id)["document"]
 
     @pytest.fixture
-    def index(self, es_client, pyramid_request):
-        def _index(annotation):
-            """Index the given annotation into Elasticsearch."""
-            index.index(es_client, annotation, pyramid_request)
-        return _index
-
-    @pytest.fixture
     def get(self, es_client):
         def _get(annotation_id):
             """Return the annotation with the given ID from Elasticsearch."""
@@ -69,6 +62,38 @@ class TestIndexAnnotationDocuments(object):
                 index=es_client.index, doc_type="annotation",
                 id=annotation_id)["_source"]
         return _get
+
+
+class TestIndex(object):
+    """Elasticsearch-integrated tests for :py:func:`h.search.index.index()`."""
+
+    def test_you_can_search_for_an_annotation_by_authority(self, es_client, factories, index):
+        annotation = factories.Annotation.build(
+            id="test_annotation_id",
+            userid="acct:someone@example.com",
+        )
+
+        index(annotation)
+
+        es_client.conn.indices.refresh(index=es_client.index)
+        search_results = [hit["_id"] for hit in es_client.conn.search(
+            index=es_client.index,
+            doc_type="annotation",
+            _source=False,
+            body={
+                "query": {
+                    "filtered": {
+                        "filter": {
+                            "term": {
+                                "authority": "example.com"
+                            }
+                        }
+                    }
+                }
+            }
+        )["hits"]["hits"]]
+
+        assert search_results == [annotation.id]
 
 
 @pytest.mark.usefixtures('presenters')
@@ -374,3 +399,11 @@ def es():
 @pytest.fixture
 def AnnotationTransformEvent(patch):
     return patch('h.search.index.AnnotationTransformEvent')
+
+
+@pytest.fixture
+def index(es_client, pyramid_request):
+    def _index(annotation):
+        """Index the given annotation into Elasticsearch."""
+        index_.index(es_client, annotation, pyramid_request)
+    return _index
