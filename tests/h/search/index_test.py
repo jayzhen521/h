@@ -5,8 +5,7 @@ import mock
 import pytest
 
 from h import presenters
-from h.search import client
-from h.search import index as index_
+from h import search
 
 
 class TestIndexAnnotationDocuments(object):
@@ -102,7 +101,7 @@ class TestIndexAnnotation:
     def test_it_presents_the_annotation(self, es, presenters, pyramid_request):
         annotation = mock.Mock()
 
-        index.index(es, annotation, pyramid_request)
+        search.index.index(es, annotation, pyramid_request)
 
         presenters.AnnotationSearchIndexPresenter.assert_called_once_with(annotation)
 
@@ -114,7 +113,7 @@ class TestIndexAnnotation:
         annotation = mock.Mock()
         presented = presenters.AnnotationSearchIndexPresenter.return_value.asdict()
 
-        index.index(es, annotation, pyramid_request)
+        search.index.index(es, annotation, pyramid_request)
 
         AnnotationTransformEvent.assert_called_once_with(pyramid_request, annotation, presented)
 
@@ -124,13 +123,13 @@ class TestIndexAnnotation:
                                            notify,
                                            presenters,
                                            pyramid_request):
-        index.index(es, mock.Mock(), pyramid_request)
+        search.index.index(es, mock.Mock(), pyramid_request)
 
         event = AnnotationTransformEvent.return_value
         notify.assert_called_once_with(event)
 
     def test_it_indexes_the_annotation(self, es, presenters, pyramid_request):
-        index.index(es, mock.Mock(), pyramid_request)
+        search.index.index(es, mock.Mock(), pyramid_request)
 
         es.conn.index.assert_called_once_with(
             index='hypothesis',
@@ -140,7 +139,7 @@ class TestIndexAnnotation:
         )
 
     def test_it_allows_to_override_target_index(self, es, presenters, pyramid_request):
-        index.index(es, mock.Mock(), pyramid_request, target_index='custom-index')
+        search.index.index(es, mock.Mock(), pyramid_request, target_index='custom-index')
 
         _, kwargs = es.conn.index.call_args
         assert kwargs['index'] == 'custom-index'
@@ -163,7 +162,7 @@ class TestIndexAnnotation:
 class TestDeleteAnnotation:
 
     def test_it_marks_annotation_as_deleted(self, es):
-        index.delete(es, 'test_annotation_id')
+        search.index.delete(es, 'test_annotation_id')
 
         es.conn.index.assert_called_once_with(
             index='hypothesis',
@@ -173,7 +172,7 @@ class TestDeleteAnnotation:
         )
 
     def test_it_allows_to_override_target_index(self, es):
-        index.delete(es, 'test_annotation_id', target_index='custom-index')
+        search.index.delete(es, 'test_annotation_id', target_index='custom-index')
 
         _, kwargs = es.conn.index.call_args
         assert kwargs['index'] == 'custom-index'
@@ -254,8 +253,8 @@ class TestBatchIndexer(object):
         )
 
     def test_index_allows_to_set_op_type(self, db_session, es, pyramid_request, streaming_bulk, factories):
-        indexer = index.BatchIndexer(db_session, es, pyramid_request,
-                                     op_type='create')
+        indexer = search.index.BatchIndexer(db_session, es, pyramid_request,
+                                            op_type='create')
         annotation = factories.Annotation()
         db_session.add(annotation)
         db_session.flush()
@@ -336,8 +335,8 @@ class TestBatchIndexer(object):
         assert result == set([ann_fail_1.id, ann_fail_2.id])
 
     def test_index_returns_failed_bulk_actions_for_create_op_type(self, pyramid_request, es, db_session, streaming_bulk, factories):
-        indexer = index.BatchIndexer(db_session, es, pyramid_request,
-                                     op_type='create')
+        indexer = search.index.BatchIndexer(db_session, es, pyramid_request,
+                                            op_type='create')
 
         ann_success_1, ann_success_2 = factories.Annotation(), factories.Annotation()
         ann_fail_1, ann_fail_2 = factories.Annotation(), factories.Annotation()
@@ -355,8 +354,8 @@ class TestBatchIndexer(object):
         assert result == set([ann_fail_1.id, ann_fail_2.id])
 
     def test_index_ignores_document_exists_errors_for_op_type_create(self, db_session, es, pyramid_request, streaming_bulk, factories):
-        indexer = index.BatchIndexer(db_session, es, pyramid_request,
-                                     op_type='create')
+        indexer = search.index.BatchIndexer(db_session, es, pyramid_request,
+                                            op_type='create')
 
         ann_success_1, ann_success_2 = factories.Annotation(), factories.Annotation()
         ann_fail_1, ann_fail_2 = factories.Annotation(), factories.Annotation()
@@ -377,7 +376,7 @@ class TestBatchIndexer(object):
 
     @pytest.fixture
     def indexer(self, db_session, es, pyramid_request):
-        return index.BatchIndexer(db_session, es, pyramid_request)
+        return search.index.BatchIndexer(db_session, es, pyramid_request)
 
     @pytest.fixture
     def index(self, patch):
@@ -390,7 +389,7 @@ class TestBatchIndexer(object):
 
 @pytest.fixture
 def es():
-    mock_es = mock.create_autospec(client.Client, instance=True, spec_set=True,
+    mock_es = mock.create_autospec(search.client.Client, instance=True, spec_set=True,
                                    index="hypothesis")
     mock_es.t.annotation = 'annotation'
     return mock_es
@@ -405,5 +404,5 @@ def AnnotationTransformEvent(patch):
 def index(es_client, pyramid_request):
     def _index(annotation):
         """Index the given annotation into Elasticsearch."""
-        index_.index(es_client, annotation, pyramid_request)
+        search.index.index(es_client, annotation, pyramid_request)
     return _index
