@@ -1,4 +1,4 @@
-DOCKER_TAG = dev
+DOCKER_TAG = prod
 
 GULP := node_modules/.bin/gulp
 
