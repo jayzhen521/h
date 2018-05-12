@@ -28,6 +28,8 @@ def _init_db(settings):
     # alembic, and we shouldn't call `db.init`.
     try:
         engine.execute('select 1 from alembic_version')
+        log.info("initializing database")
+        db.init(engine, should_create=True, authority=text_type(settings['h.authority']))
     except sqlalchemy.exc.ProgrammingError:
         log.info("initializing database")
         db.init(engine, should_create=True, authority=text_type(settings['h.authority']))
