@@ -141,7 +141,7 @@ class ListGroupsService(object):
         log.warn(group.ReadableBy.world.value)
         groups = (self._session.query(models.Group)
                       .filter_by(authority=authority,
-                                 readable_by=group.ReadableBy.world)
+                                 readable_by=group.ReadableBy.world.value)
                       .all())
         # groups = (self._session.query(models.Group).all())
         log.warn(len(groups))
