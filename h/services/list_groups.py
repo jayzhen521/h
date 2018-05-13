@@ -143,7 +143,8 @@ class ListGroupsService(object):
                       .filter_by(authority=authority,
                                  readable_by=group.ReadableBy.world)
                       .all())
-        # groups = (self._session.query(models.Group).all())
+        groups = (self._session.query(models.Group).all())
+        log.warn(len(groups))
         return self._sort(groups)
 
     def _user_groups(self, user=None):
