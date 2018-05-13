@@ -6,6 +6,10 @@ from h import models
 from h.models import group
 from h.util import group_scope as scope_util
 
+import logging
+
+log = logging.getLogger(__name__)
+
 
 class ListGroupsService(object):
 
@@ -130,10 +134,16 @@ class ListGroupsService(object):
         """
 
         authority = self._authority(user, authority)
+        log.warn('_readable_by_world_groups')
+        log.warn(models.Group)
+        log.warn(user)
+        log.warn(authority)
+        log.warn(group.ReadableBy.world)
         groups = (self._session.query(models.Group)
                       .filter_by(authority=authority,
                                  readable_by=group.ReadableBy.world)
                       .all())
+        groups = (self._session.query(models.Group).all())
         return self._sort(groups)
 
     def _user_groups(self, user=None):
