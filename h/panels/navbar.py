@@ -8,6 +8,10 @@ from pyramid_layout.panel import panel_config
 
 from h.i18n import TranslationString as _  # noqa
 
+import logging
+
+log = logging.getLogger(__name__)
+
 
 @panel_config(name='navbar', renderer='h:templates/panels/navbar.html.jinja2')
 def navbar(context, request, search=None, opts=None):
