@@ -22,13 +22,16 @@ def navbar(context, request, search=None, opts=None):
     groups_suggestions = []
     user_activity_url = None
     username = None
-
+    log.warn("xxxxxxxxxxxxxxxxxxxx1")
     if request.user:
         user_activity_url = request.route_url('activity.user_search',
                                               username=request.user.username)
         username = request.user.username
+        log.warn("xxxxxxxxxxxxxxxxxxxx2")
+        log.warn(username)
     # Make all groups associated with the user visible in the search auto complete.
     list_group_service = request.find_service(name='list_groups')
+    log.warn(list_group_service)
     groups = list_group_service.associated_groups(request.user)
 
     def _relationship(group, username):
