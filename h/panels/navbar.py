@@ -38,6 +38,7 @@ def navbar(context, request, search=None, opts=None):
     log.warn(list_group_service)
     groups = list_group_service.associated_groups(request.user)
     log.warn(groups)
+    log.warn(len(groups))
 
     def _relationship(group, username):
         if group.creator == username:
