@@ -138,7 +138,7 @@ class ListGroupsService(object):
         log.warn(models.Group)
         log.warn(user)
         log.warn(authority)
-        log.warn(group.ReadableBy.world)
+        log.warn(group.ReadableBy.world.value)
         groups = (self._session.query(models.Group)
                       .filter_by(authority=authority,
                                  readable_by=group.ReadableBy.world)
