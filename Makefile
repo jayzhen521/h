@@ -37,6 +37,7 @@ docker:
 # Run docker image built with `docker` task
 .PHONY: run-docker
 run-docker:
+	@bin/hypothesis init
 	$(eval RABBITMQ_CONTAINER ?= rabbitmq)
 	$(eval PG_CONTAINER ?= postgres)
 	$(eval ES_CONTAINER ?= elasticsearch)
@@ -44,7 +45,9 @@ run-docker:
 		--link $(RABBITMQ_CONTAINER) \
 		--link $(PG_CONTAINER) \
 		--link $(ES_CONTAINER) \
-		-e "APP_URL=http://localhost:5000" \
+		-e "APP_URL=https://anno.wenxee.com" \
+		-e "WEBSOCKET_URL='wss://anno.wenxee.com/ws'" \
+		-e "AUTHORITY=anno.wenxee.com" \
 		-e "BROKER_URL=amqp://guest:guest@$(RABBITMQ_CONTAINER):5672//" \
 		-e "DATABASE_URL=postgresql://postgres@$(PG_CONTAINER)/postgres" \
 		-e "ELASTICSEARCH_HOST=http://$(ES_CONTAINER):9200" \
