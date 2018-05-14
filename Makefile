@@ -37,7 +37,6 @@ docker:
 # Run docker image built with `docker` task
 .PHONY: run-docker
 run-docker:
-	@bin/hypothesis init
 	$(eval RABBITMQ_CONTAINER ?= rabbitmq)
 	$(eval PG_CONTAINER ?= postgres)
 	$(eval ES_CONTAINER ?= elasticsearch)
@@ -53,6 +52,10 @@ run-docker:
 		-e "ELASTICSEARCH_HOST=http://$(ES_CONTAINER):9200" \
 		-p 5000:5000 \
 		hypothesis/hypothesis:$(DOCKER_TAG)
+
+.PHONY: docker_init
+docker_init:
+	@bin/hypothesis init
 
 ## Run test suite
 .PHONY: test
