@@ -5,6 +5,9 @@ from __future__ import unicode_literals
 from h import models
 from h.models import group
 from h.util import group_scope as scope_util
+import logging
+
+log = logging.getLogger(__name__)
 
 
 class ListGroupsService(object):

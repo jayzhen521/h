@@ -26,7 +26,7 @@ def generate(request, user):
         'reset_link': request.route_url('account_reset_with_code', code=code)
     }
 
-    subject = _('Reset your password')
+    subject = request.localizer.translate(_('Reset your password'))
 
     text = render('h:templates/emails/reset_password.txt.jinja2',
                   context,

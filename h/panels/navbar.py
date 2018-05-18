@@ -54,16 +54,16 @@ def navbar(context, request, search=None, opts=None):
 
     return {
         'settings_menu_items': [
-            {'title': _('Account details'), 'link': request.route_url('account')},
-            {'title': _('Edit profile'), 'link': request.route_url('account_profile')},
-            {'title': _('Notifications'), 'link': request.route_url('account_notifications')},
-            {'title': _('Developer'), 'link': request.route_url('account_developer')},
+            {'title': request.localizer.translate(_('Account details')), 'link': request.route_url('account')},
+            {'title': request.localizer.translate(_('Edit profile')), 'link': request.route_url('account_profile')},
+            {'title': request.localizer.translate(_('Notifications')), 'link': request.route_url('account_notifications')},
+            {'title': request.localizer.translate(_('Developer')), 'link': request.route_url('account_developer')},
         ],
-        'signout_item': {'title': _('Sign out'), 'link': request.route_url('logout')},
+        'signout_item': {'title': request.localizer.translate(_('Sign out')), 'link': request.route_url('logout')},
         'groups_menu_items': groups_menu_items,
         'groups_suggestions': groups_suggestions,
         'create_group_item':
-            {'title': _('Create new group'), 'link': request.route_url('group_create')},
+            {'title': request.localizer.translate(_('Create new group')), 'link': request.route_url('group_create')},
         'username': username,
         'username_url': user_activity_url,
         'search': search,

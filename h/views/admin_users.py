@@ -59,8 +59,8 @@ def users_activate(request):
 
     user.activate()
 
-    request.session.flash(jinja2.Markup(_(
-        'User {name} has been activated!'.format(name=user.username))),
+    request.session.flash(jinja2.Markup(request.localizer.translate(_(
+        'User {name} has been activated!'.format(name=user.username)))),
         'success')
 
     request.registry.notify(ActivationEvent(request, user))
@@ -125,7 +125,7 @@ def users_delete(request):
 
 @view_config(context=UserNotFoundError)
 def user_not_found(exc, request):
-    request.session.flash(jinja2.Markup(_(exc.message)), 'error')
+    request.session.flash(jinja2.Markup(request.localizer.translate(_(exc.message))), 'error')
     return httpexceptions.HTTPFound(location=request.route_path('admin_users'))
 
 

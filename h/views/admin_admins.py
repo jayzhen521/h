@@ -34,8 +34,8 @@ def admins_add(request):
     user = models.User.get_by_username(request.db, username, authority)
     if user is None:
         request.session.flash(
-            _("User {username} doesn't exist.".format(username=username)),
-            "error")
+            request.localizer.translate(_("User {username} doesn't exist.".format(username=username)),
+            "error"))
     else:
         user.admin = True
     index = request.route_path('admin_admins')

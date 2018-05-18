@@ -44,7 +44,7 @@ def features_save(request):
                 if cohort in feat.cohorts:
                     feat.cohorts.remove(cohort)
 
-    request.session.flash(_("Changes saved."), "success")
+    request.session.flash(self.request.localizer.translate(_("Changes saved.")), "success")
     return httpexceptions.HTTPSeeOther(
         location=request.route_url('admin_features'))
 
@@ -103,8 +103,8 @@ def cohorts_edit_add(request):
     member = models.User.get_by_username(request.db, member_name, member_authority)
     if member is None:
         request.session.flash(
-            _("User {member_name} with authority {authority} doesn't exist.".format(
-                member_name=member_name, authority=member_authority)),
+            self.request.localizer.translate(_("User {member_name} with authority {authority} doesn't exist.".format(
+                member_name=member_name, authority=member_authority))),
             "error")
     else:
         cohort = request.db.query(models.FeatureCohort).get(cohort_id)
@@ -130,7 +130,7 @@ def cohorts_edit_remove(request):
         cohort.members.remove(member)
     except ValueError:
         request.session.flash(
-            _("User {member_userid} doesn't exist.".format(member_userid=member_userid)),
+            self.request.localizer.translate(_("User {member_userid} doesn't exist.".format(member_userid=member_userid))),
             "error")
 
     url = request.route_url('admin_cohorts_edit', id=cohort_id)

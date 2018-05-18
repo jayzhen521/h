@@ -24,7 +24,7 @@ def generate(request, email, incontext_link):
         'incontext_link': incontext_link,
     }
 
-    subject = _('An annotation has been flagged')
+    subject = request.localizer.translate(_('An annotation has been flagged'))
 
     text = render('h:templates/emails/flag_notification.txt.jinja2',
                   context,

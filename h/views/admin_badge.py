@@ -33,7 +33,7 @@ def badge_add(request):
         request.db.flush()
     except IntegrityError:
         request.db.rollback()
-        msg = _("{uri} is already blocked.").format(uri=uri)
+        msg = request.localizer.translate(_("{uri} is already blocked.").format(uri=uri))
         request.session.flash(msg, 'error')
 
     index = request.route_path('admin_badge')

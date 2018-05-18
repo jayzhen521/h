@@ -84,7 +84,7 @@ class SearchController(object):
             'user_link': user_link,
             'username_from_id': username_from_id,
             # The message that is shown (only) if there's no search results.
-            'zero_message': _('No annotations matched your search.'),
+            'zero_message': self.request.localizer.translate(_('No annotations matched your search.')),
         }
 
 
@@ -166,18 +166,18 @@ class GroupSearchController(SearchController):
             'url': self.request.route_url('group_read',
                                           pubid=self.group.pubid,
                                           slug=self.group.slug),
-            'share_subtitle': _('Share group'),
-            'share_msg': _('Sharing the link lets people view this group:'),
+            'share_subtitle': self.request.localizer.translate(_('Share group')),
+            'share_msg': self.request.localizer.translate(_('Sharing the link lets people view this group:')),
             'organization': {'name': self.group.organization.name,
                              'logo': self._organization_context.logo}
         }
 
         if self.group.type == 'private':
-            result['group']['share_subtitle'] = _('Invite new members')
-            result['group']['share_msg'] = _('Sharing the link lets people join this group:')
+            result['group']['share_subtitle'] = self.request.localizer.translate(_('Invite new members'))
+            result['group']['share_msg'] = self.request.localizer.translate(_('Sharing the link lets people join this group:'))
 
         result['group_users_args'] = [
-            _('Members'),
+            self.request.localizer.translate(_('Members')),
             moderators if self.group.type == 'open' else members,
             self.group.creator.userid if self.group.creator else None,
         ]
@@ -189,8 +189,8 @@ class GroupSearchController(SearchController):
         result['more_info'] = 'more_info' in self.request.params
 
         if not result.get('q'):
-            result['zero_message'] = Markup(_(
-                'The group “{name}” has not made any annotations yet.').format(
+            result['zero_message'] = Markup(self.request.localizer.translate(_(
+                'The group “{name}” has not made any annotations yet.')).format(
                     name=Markup.escape(self.group.name)))
 
         result['show_leave_button'] = self.request.user in self.group.members
@@ -357,9 +357,9 @@ class UserSearchController(SearchController):
                 # Tell the template that it should show "How to get started".
                 result['zero_message'] = '__SHOW_GETTING_STARTED__'
             else:
-                result['zero_message'] = _(
+                result['zero_message'] = self.request.localizer.translate(_(
                     "{name} has not made any annotations yet.".format(
-                        name=result['user']['name']))
+                        name=result['user']['name'])))
 
         return result
 

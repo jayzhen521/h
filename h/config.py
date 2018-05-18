@@ -101,6 +101,10 @@ SETTINGS = [
 
     # Debug/development settings
     EnvSetting('debug_query', 'DEBUG_QUERY'),
+
+
+    # Internationalization and Localization
+    EnvSetting('default_locale_name', 'I18N'),
 ]
 
 

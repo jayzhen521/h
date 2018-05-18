@@ -36,7 +36,7 @@ def nipsa_add(request):
 
     if user is None:
         raise UserNotFoundError(
-            _("Could not find user with username %s and authority %s" % (username, authority))
+            request.localizer.translate(_("Could not find user with username %s and authority %s" % (username, authority)))
         )
 
     nipsa_service = request.find_service(name='nipsa')
@@ -56,7 +56,7 @@ def nipsa_remove(request):
     user = request.db.query(models.User).filter_by(userid=userid).first()
     if user is None:
         raise UserNotFoundError(
-            _("Could not find user with userid %s" % userid)
+            request.localizer.translate(_("Could not find user with userid %s" % userid))
         )
 
     nipsa_service = request.find_service(name='nipsa')

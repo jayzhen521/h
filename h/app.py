@@ -33,7 +33,10 @@ def create_app(global_config, **settings):
 
     This function serves as a paste app factory.
     """
+    # settings['pyramid.default_locale_name'] = 'zh'
+    settings.setdefault('jinja2.i18n.domain', 'h')
     config = configure(settings=settings)
+    config.add_translation_dirs('h:locale/')
     config.include(__name__)
     return config.make_wsgi_app()
 

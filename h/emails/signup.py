@@ -28,7 +28,7 @@ def generate(request, id, email, activation_code):
                                            code=activation_code),
     }
 
-    subject = _('Please activate your account')
+    subject = request.localizer.translate(_('Please activate your account'))
 
     text = render('h:templates/emails/signup.txt.jinja2',
                   context,

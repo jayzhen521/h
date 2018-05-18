@@ -24,8 +24,8 @@ from h.util.view import handle_exception, json_view
 def api_notfound(request):
     """Handle a request for an unknown/forbidden resource within the API."""
     request.response.status_code = 404
-    message = _("Either the resource you requested doesn't exist, or you are "
-                "not currently authorized to see it.")
+    message = request.localizer.translate(_("Either the resource you requested doesn't exist, or you are "
+                "not currently authorized to see it."))
     return {'status': 'failure', 'reason': message}
 
 
@@ -46,10 +46,10 @@ def api_validation_error(context, request):
 def json_error(request):
     """Handle an unexpected exception where the request asked for JSON."""
     handle_exception(request)
-    message = _("Uh-oh, something went wrong! We're very sorry, our "
+    message = request.localizer.translate(_("Uh-oh, something went wrong! We're very sorry, our "
                 "application wasn't able to load this page. The team has "
                 "been notified and we'll fix it shortly. If the problem "
                 "persists or you'd like more information please email "
                 "support@hypothes.is with the subject 'Internal Server "
-                "Error'.")
+                "Error'."))
     return {'status': 'failure', 'reason': message}

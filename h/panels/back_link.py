@@ -22,9 +22,9 @@ def back_link(context, request):
 
     if referrer_path == request.route_path('activity.user_search',
                                            username=current_username):
-        back_label = _('Back to your profile page')
+        back_label = request.localizer.translate(_('Back to your profile page'))
     elif _matches_route(referrer_path, request, 'group_read'):
-        back_label = _('Back to group overview page')
+        back_label = request.localizer.translate(_('Back to group overview page'))
     else:
         back_label = None
 
