@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: h 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-18 20:21+0800\n"
+"POT-Creation-Date: 2018-05-18 23:36+0800\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -447,6 +447,14 @@ msgstr ""
 msgid "Generate your API token"
 msgstr ""
 
+#: h/templates/accounts/login.html.jinja2:16
+msgid " Don't have a Hypothesis account? "
+msgstr ""
+
+#: h/templates/accounts/login.html.jinja2:17
+msgid " Sign up "
+msgstr ""
+
 #: h/templates/accounts/reset.html.jinja2:16
 msgid ""
 "\n"
@@ -644,6 +652,14 @@ msgstr ""
 
 #: h/templates/includes/search_form.html.jinja2:8
 msgid "Search"
+msgstr ""
+
+#: h/templates/panels/navbar.html.jinja2:19
+msgid "Remove search term"
+msgstr ""
+
+#: h/templates/panels/navbar.html.jinja2:58
+msgid "Search annotations"
 msgstr ""
 
 #: h/views/account_signup.py:31

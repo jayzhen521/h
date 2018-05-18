@@ -62,7 +62,7 @@ def bad_csrf_token_html(context, request):
 @json_view(context=BadCSRFToken)
 def bad_csrf_token_json(context, request):
     request.response.status_code = 403
-    reason = _('Session is invalid. Please try again.')
+    reason = request.localizer.translate(_('Session is invalid. Please try again.'))
     return {
         'status': 'failure',
         'reason': reason,
@@ -94,14 +94,14 @@ class AuthController(object):
     def __init__(self, request):
         form_footer = '<a class="link" href="{href}">{text}</a>'.format(
             href=request.route_path('forgot_password'),
-            text=_('Forgot your password?'))
+            text=request.localizer.translate(_('Forgot your password?')))
 
         self.request = request
         self.schema = schemas.LoginSchema().bind(request=self.request)
 
         show_cancel_button = bool(request.params.get('for_oauth', False))
         self.form = request.create_form(self.schema,
-                                        buttons=(_('Log in'),),
+                                        buttons=(request.localizer.translate(_('Log in')),),
                                         footer=form_footer,
                                         show_cancel_button=show_cancel_button)
 
@@ -174,7 +174,7 @@ class ForgotPasswordController(object):
     def __init__(self, request):
         self.request = request
         self.schema = schemas.ForgotPasswordSchema().bind(request=self.request)
-        self.form = request.create_form(self.schema, buttons=(_('Reset'),))
+        self.form = request.create_form(self.schema, buttons=(request.localizer.translate(_('Reset')),))
 
     @view_config(request_method='GET')
     def get(self):
@@ -227,7 +227,7 @@ class ResetController(object):
         self.form = request.create_form(
             schema=self.schema,
             action=self.request.route_path('account_reset'),
-            buttons=(_('Save'),))
+            buttons=(request.localizer.translate(_('Save')),))
 
     @view_config(request_method='GET')
     def get(self):
@@ -284,10 +284,10 @@ class ResetController(object):
         svc = self.request.find_service(name='user_password')
         svc.update_password(user, password)
 
-        self.request.session.flash(jinja2.Markup(_(
+        self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
             'Your password has been reset. '
             'You can now <a href="{url}">login</a> with your new '
-            'password.').format(url=self.request.route_url('login'))),
+            'password.')).format(url=self.request.route_url('login'))),
             'success')
         self.request.registry.notify(PasswordResetEvent(self.request, user))
 
@@ -317,11 +317,11 @@ class ActivateController(object):
 
         activation = models.Activation.get_by_code(self.request.db, code)
         if activation is None:
-            self.request.session.flash(jinja2.Markup(_(
+            self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
                 "We didn't recognize that activation link. "
                 "Have you already activated your account? "
                 'If so, try <a href="{url}">logging in</a> using the username '
-                'and password that you provided.').format(
+                'and password that you provided.')).format(
                     url=self.request.route_url('login'))),
                 'error')
             return httpexceptions.HTTPFound(
@@ -333,10 +333,10 @@ class ActivateController(object):
 
         user.activate()
 
-        self.request.session.flash(jinja2.Markup(_(
+        self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
             'Your account has been activated! '
             'You can now <a href="{url}">log in</a> using the password you '
-            'provided.').format(url=self.request.route_url('login'))),
+            'provided.')).format(url=self.request.route_url('login'))),
             'success')
 
         self.request.registry.notify(ActivationEvent(self.request, user))
@@ -358,14 +358,14 @@ class ActivateController(object):
         if id_ == self.request.user.id:
             # The user is already logged in to the account (so the account
             # must already be activated).
-            self.request.session.flash(jinja2.Markup(_(
-                "Your account has been activated and you're logged in.")),
+            self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
+                "Your account has been activated and you're logged in."))),
                 'success')
         else:
-            self.request.session.flash(jinja2.Markup(_(
+            self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
                 "You're already logged in to a different account. "
                 '<a href="{url}">Log out</a> and open the activation link '
-                'again.').format(
+                'again.')).format(
                     url=self.request.route_url('logout'))),
                 'error')
 
@@ -390,12 +390,12 @@ class AccountController(object):
 
         self.forms = {
             'email': request.create_form(email_schema,
-                                         buttons=(_('Save'),),
+                                         buttons=(request.localizer.translate(_('Save')),),
                                          formid='email',
                                          counter=counter,
                                          use_inline_editing=True),
             'password': request.create_form(password_schema,
-                                            buttons=(_('Save'),),
+                                            buttons=(request.localizer.translate(_('Save')),),
                                             formid='password',
                                             counter=counter,
                                             use_inline_editing=True),
@@ -453,7 +453,7 @@ class EditProfileController(object):
         self.request = request
         self.schema = schemas.EditProfileSchema().bind(request=self.request)
         self.form = request.create_form(self.schema,
-                                        buttons=(_('Save'),),
+                                        buttons=(request.localizer.translate(_('Save')),),
                                         use_inline_editing=True)
 
     @view_config(request_method='GET')
@@ -498,7 +498,7 @@ class NotificationsController(object):
         self.request = request
         self.schema = schemas.NotificationsSchema().bind(request=self.request)
         self.form = request.create_form(self.schema,
-                                        buttons=(_('Save'),),
+                                        buttons=(request.localizer.translate(_('Save')),),
                                         use_inline_editing=True)
 
     @view_config(request_method='GET')

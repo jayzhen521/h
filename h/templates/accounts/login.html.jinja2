@@ -13,8 +13,8 @@
     {{ form }}
 
     <footer class="form-footer">
-      Don't have a Hypothesis account?
-      <a class="link--footer" href="{{ request.route_path('signup') }}">Sign up</a>
+      {% trans %} Don't have a Hypothesis account? {% endtrans %}
+      <a class="link--footer" href="{{ request.route_path('signup') }}">{% trans %} Sign up {% endtrans %}</a>
     </footer>
   </div>
 {% endblock content %}

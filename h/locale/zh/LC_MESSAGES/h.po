@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: h 0.0\n"
 "Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
-"POT-Creation-Date: 2018-05-18 20:21+0800\n"
+"POT-Creation-Date: 2018-05-18 23:36+0800\n"
 "PO-Revision-Date: 2018-05-18 02:55+0800\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language: zh\n"
@@ -457,6 +457,16 @@ msgstr "删除你的API码并重新生成一个"
 msgid "Generate your API token"
 msgstr "生成你的API码"
 
+#: h/templates/accounts/login.html.jinja2:16
+msgid " Don't have a Hypothesis account? "
+msgstr "没有Wenxee笔记帐户？"
+
+#: h/templates/accounts/login.html.jinja2:17
+#, fuzzy
+#| msgid "Sign up"
+msgid " Sign up "
+msgstr "注册"
+
 #: h/templates/accounts/reset.html.jinja2:16
 msgid ""
 "\n"
@@ -668,6 +678,18 @@ msgstr "来到下一页"
 #: h/templates/includes/search_form.html.jinja2:8
 msgid "Search"
 msgstr "查询"
+
+#: h/templates/panels/navbar.html.jinja2:19
+#, fuzzy
+#| msgid "Remove item"
+msgid "Remove search term"
+msgstr "删除项"
+
+#: h/templates/panels/navbar.html.jinja2:58
+#, fuzzy
+#| msgid "Matching Annotations"
+msgid "Search annotations"
+msgstr "匹配的笔记"
 
 #: h/views/account_signup.py:31
 msgid "Sign up"
