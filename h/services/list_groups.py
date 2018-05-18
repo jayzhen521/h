@@ -129,10 +129,11 @@ class ListGroupsService(object):
         Return all groups readable by world for the authority.
         """
 
+        log.info(group.ReadableBy.world.value)
         authority = self._authority(user, authority)
         groups = (self._session.query(models.Group)
                       .filter_by(authority=authority,
-                                 readable_by=group.ReadableBy.world)
+                                 readable_by=group.ReadableBy.world.value)
                       .all())
         return self._sort(groups)
 
