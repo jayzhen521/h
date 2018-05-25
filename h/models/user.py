@@ -247,6 +247,7 @@ class User(Base):
         session = sa.orm.object_session(self)
         log.warn(self.activation)
         session.delete(self.activation)
+        log.warn(session.was_deleted(self.activation))
 
     #: Hashed password
     password = sa.Column(sa.UnicodeText(), nullable=True)
