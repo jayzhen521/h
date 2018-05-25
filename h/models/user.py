@@ -247,10 +247,6 @@ class User(Base):
         session = sa.orm.object_session(self)
         log.warn(self.activation)
         session.delete(self.activation)
-        if session.was_deleted(self.activation):
-            log.warn("is deleted")
-        else:
-            log.warn("not deleted")
 
     #: Hashed password
     password = sa.Column(sa.UnicodeText(), nullable=True)

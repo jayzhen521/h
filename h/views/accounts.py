@@ -339,7 +339,7 @@ class ActivateController(object):
 
         user.activate()
         log.warn("has activated")
-        self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
+        self.request.session.flash(jinja2.Markup(self.request.localizer.translate(_(
             'Your account has been activated! '
             'You can now <a href="{url}">log in</a> using the password you '
             'provided.')).format(url=self.request.route_url('login'))),
