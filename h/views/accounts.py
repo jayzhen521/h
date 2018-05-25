@@ -101,7 +101,7 @@ class AuthController(object):
 
         show_cancel_button = bool(request.params.get('for_oauth', False))
         self.form = request.create_form(self.schema,
-                                        buttons=(request.localizer.translate(_('Log in')),),
+                                        buttons=(self.request.localizer.translate(_('Log in')),),
                                         footer=form_footer,
                                         show_cancel_button=show_cancel_button)
 
@@ -174,7 +174,7 @@ class ForgotPasswordController(object):
     def __init__(self, request):
         self.request = request
         self.schema = schemas.ForgotPasswordSchema().bind(request=self.request)
-        self.form = request.create_form(self.schema, buttons=(request.localizer.translate(_('Reset')),))
+        self.form = request.create_form(self.schema, buttons=(self.request.localizer.translate(_('Reset')),))
 
     @view_config(request_method='GET')
     def get(self):
@@ -227,7 +227,7 @@ class ResetController(object):
         self.form = request.create_form(
             schema=self.schema,
             action=self.request.route_path('account_reset'),
-            buttons=(request.localizer.translate(_('Save')),))
+            buttons=(self.request.localizer.translate(_('Save')),))
 
     @view_config(request_method='GET')
     def get(self):
@@ -284,7 +284,7 @@ class ResetController(object):
         svc = self.request.find_service(name='user_password')
         svc.update_password(user, password)
 
-        self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
+        self.request.session.flash(jinja2.Markup(self.request.localizer.translate(_(
             'Your password has been reset. '
             'You can now <a href="{url}">login</a> with your new '
             'password.')).format(url=self.request.route_url('login'))),
@@ -333,7 +333,7 @@ class ActivateController(object):
 
         user.activate()
 
-        self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
+        self.request.session.flash(jinja2.Markup(self.request.localizer.translate(_(
             'Your account has been activated! '
             'You can now <a href="{url}">log in</a> using the password you '
             'provided.')).format(url=self.request.route_url('login'))),
@@ -358,11 +358,11 @@ class ActivateController(object):
         if id_ == self.request.user.id:
             # The user is already logged in to the account (so the account
             # must already be activated).
-            self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
+            self.request.session.flash(jinja2.Markup(self.request.localizer.translate(_(
                 "Your account has been activated and you're logged in."))),
                 'success')
         else:
-            self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
+            self.request.session.flash(jinja2.Markup(self.request.localizer.translate(_(
                 "You're already logged in to a different account. "
                 '<a href="{url}">Log out</a> and open the activation link '
                 'again.')).format(
@@ -453,7 +453,7 @@ class EditProfileController(object):
         self.request = request
         self.schema = schemas.EditProfileSchema().bind(request=self.request)
         self.form = request.create_form(self.schema,
-                                        buttons=(request.localizer.translate(_('Save')),),
+                                        buttons=(self.request.localizer.translate(_('Save')),),
                                         use_inline_editing=True)
 
     @view_config(request_method='GET')
@@ -498,7 +498,7 @@ class NotificationsController(object):
         self.request = request
         self.schema = schemas.NotificationsSchema().bind(request=self.request)
         self.form = request.create_form(self.schema,
-                                        buttons=(request.localizer.translate(_('Save')),),
+                                        buttons=(self.request.localizer.translate(_('Save')),),
                                         use_inline_editing=True)
 
     @view_config(request_method='GET')
