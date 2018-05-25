@@ -27,8 +27,10 @@ from h.tasks import mailer
 from h.util.view import json_view
 from h._compat import urlparse
 
-_ = i18n.TranslationString
+import logging
 
+_ = i18n.TranslationString
+log = logging.getLogger(__name__)
 
 # A little helper to ensure that session data is returned in every ajax
 # response payload.
@@ -307,16 +309,19 @@ class ActivateController(object):
         that it is an activation for the passed user id. If all is well,
         activate the user and redirect them.
         """
+        log.warn("run in not logged in")
         code = self.request.matchdict.get('code')
         id_ = self.request.matchdict.get('id')
 
         try:
             id_ = int(id_)
         except ValueError:
+            log.warn("ValueError")
             raise httpexceptions.HTTPNotFound()
 
         activation = models.Activation.get_by_code(self.request.db, code)
         if activation is None:
+            log.warn("activation si None")
             self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
                 "We didn't recognize that activation link. "
                 "Have you already activated your account? "
@@ -329,10 +334,11 @@ class ActivateController(object):
 
         user = models.User.get_by_activation(self.request.db, activation)
         if user is None or user.id != id_:
+            log.warn("activation-----------")
             raise httpexceptions.HTTPNotFound()
 
         user.activate()
-
+        log.warn("has activated")
         self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
             'Your account has been activated! '
             'You can now <a href="{url}">log in</a> using the password you '
@@ -348,6 +354,7 @@ class ActivateController(object):
                  effective_principals=security.Authenticated)
     def get_when_logged_in(self):
         """Handle an activation link request while already logged in."""
+        log.warn("run in logged in")
         id_ = self.request.matchdict.get('id')
 
         try:

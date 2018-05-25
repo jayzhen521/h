@@ -12,11 +12,15 @@ from h._compat import string_types
 from h.db import Base
 from h.util.user import split_user
 
+import logging
+
 USERNAME_MIN_LENGTH = 3
 USERNAME_MAX_LENGTH = 30
 USERNAME_PATTERN = '(?i)^[A-Z0-9._]+$'
 EMAIL_MAX_LENGTH = 100
 DISPLAY_NAME_MAX_LENGTH = 30
+
+log = logging.getLogger(__name__)
 
 
 def _normalise_username(username):
@@ -239,6 +243,7 @@ class User(Base):
 
     def activate(self):
         """Activate the user by deleting any activation they have."""
+        log.warn("run in activate of user model")
         session = sa.orm.object_session(self)
         session.delete(self.activation)
 
