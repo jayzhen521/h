@@ -245,6 +245,7 @@ class User(Base):
         """Activate the user by deleting any activation they have."""
         log.warn("run in activate of user model------")
         session = sa.orm.object_session(self)
+        log.warn(self.activation)
         session.delete(self.activation)
 
     #: Hashed password
