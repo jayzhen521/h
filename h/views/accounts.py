@@ -317,7 +317,7 @@ class ActivateController(object):
 
         activation = models.Activation.get_by_code(self.request.db, code)
         if activation is None:
-            self.request.session.flash(jinja2.Markup(request.localizer.translate(_(
+            self.request.session.flash(jinja2.Markup(self.request.localizer.translate(_(
                 "We didn't recognize that activation link. "
                 "Have you already activated your account? "
                 'If so, try <a href="{url}">logging in</a> using the username '
