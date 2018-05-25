@@ -243,7 +243,7 @@ class User(Base):
 
     def activate(self):
         """Activate the user by deleting any activation they have."""
-        log.warn("run in activate of user model")
+        log.warn("run in activate of user model------")
         session = sa.orm.object_session(self)
         session.delete(self.activation)
 
