@@ -13,6 +13,10 @@ from h.services.rename_user import UserRenameError
 from h.tasks.admin import rename_user
 from h.i18n import TranslationString as _  # noqa
 
+import logging
+
+log = logging.getLogger(__name__)
+
 
 class UserNotFoundError(Exception):
     pass
@@ -55,6 +59,7 @@ def users_index(request):
              permission='admin_users',
              require_csrf=True)
 def users_activate(request):
+    log.warn('in user_activate')
     user = _form_request_user(request)
 
     user.activate()
